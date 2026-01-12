@@ -1,5 +1,5 @@
-import Sidebar from "../component/sidebar/page";
-import StatCard from "../component/statcard/page";
+import Sidebar from "../../../component/ui/sidebar-page";
+import StatCard from "../../../component/statchat-page";
 
 const Dashboard = () => {
   return (
