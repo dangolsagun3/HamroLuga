@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import SignUpPage from '../SignUpPage/page'
 
 const LoginPage = () => {
   const [contact, setNumber] = useState('')
@@ -113,7 +114,7 @@ const LoginPage = () => {
 
           <p className="mt-6 text-center text-gray-600">
             Don't have an account?{' '}
-            <Link href="/(authpage)/register" className="text-indigo-600 hover:text-indigo-700 font-semibold">
+            <Link href="/SignUpPage" className="text-indigo-600 hover:text-indigo-700 font-semibold">
               Sign up
             </Link>
           </p>
