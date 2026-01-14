@@ -37,12 +37,10 @@ export function NavigationMenuTrigger({
 export function NavigationMenuDemo() {
   return (
     <NavigationMenu>
-      {/* Logo */}
       <Link href="/" className="text-xl font-bold text-blue-600">
         🛍️ MyShop
       </Link>
 
-      {/* Menu */}
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Home</NavigationMenuTrigger>
@@ -56,15 +54,13 @@ export function NavigationMenuDemo() {
           <NavigationMenuTrigger>Contact</NavigationMenuTrigger>
         </NavigationMenuItem>
 
-        {/* Cart */}
         <NavigationMenuItem>
           <button className="relative flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
             <ShoppingCart size={18} />
             <span className="text-sm font-medium">Cart</span>
 
-            {/* Cart badge */}
             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-              0
+              
             </span>
           </button>
         </NavigationMenuItem>

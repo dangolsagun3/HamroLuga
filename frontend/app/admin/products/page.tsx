@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { EditIcon, RefreshCcwIcon, Trash2 } from "lucide-react"
+import { EditIcon, RefreshCcwIcon, Trash, Trash2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
 import { cn } from "@/lib/utils"
@@ -39,6 +39,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import axios from "axios"
 import { toast } from "sonner"
+
+
 
 interface Product {
   id: number;
@@ -93,6 +95,8 @@ export function DeleteDialog({ item }: DeleteDialogProps) {
     </Dialog>
   )
 }
+
+
 
 interface ProductDialogProps {
   action?: 'edit' | 'add';

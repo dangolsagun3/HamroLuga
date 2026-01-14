@@ -1,10 +1,10 @@
-import Sidebar from "../../../component/ui/sidebar-page";
+import TableDemo from "../../../component/ui/sidebar-page";
 import StatCard from "../../../component/statchat-page";
 
 const Dashboard = () => {
   return (
     <div className="flex">
-      <Sidebar />
+      <TableDemo />
 
       <main className="flex-1 bg-gray-100 p-6">
         <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
