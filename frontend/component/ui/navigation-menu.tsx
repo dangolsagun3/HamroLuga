@@ -2,20 +2,13 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ShoppingCart } from "lucide-react"
+import { ShoppingCart, Search, User, Menu } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 
-export function NavigationMenu({ children }: { children: React.ReactNode }) {
-  return (
-    <nav className="w-full bg-white border-b shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between h-16">
-        {children}
-      </div>
-    </nav>
-  )
-}
-
-export function NavigationMenuList({ children }: { children: React.ReactNode }) {
-  return <ul className="flex items-center gap-8">{children}</ul>
+interface NavigationMenuProps {
+  cartCount?: number;
+  onSearch?: (query: string) => void;
 }
 
 export function NavigationMenuItem({ children }: { children: React.ReactNode }) {
@@ -34,39 +27,120 @@ export function NavigationMenuTrigger({
   )
 }
 
-export function NavigationMenuDemo() {
+export function NavigationMenuDemo({ cartCount = 0, onSearch }: NavigationMenuProps) {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSearch?.(searchQuery);
+  };
+
   return (
-    <NavigationMenu>
-      <Link href="/" className="text-xl font-bold text-blue-600">
-        🛍️ MyShop
-      </Link>
+    <nav className="w-full bg-white border-b shadow-sm sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link href="/" className="text-2xl font-bold text-blue-600 flex items-center gap-2">
+            🛍️ HamroLuga
+          </Link>
 
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Home</NavigationMenuTrigger>
-        </NavigationMenuItem>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            <Link href="/" className="text-gray-700 hover:text-blue-600 transition font-medium">
+              Home
+            </Link>
+            <Link href="/products" className="text-gray-700 hover:text-blue-600 transition font-medium">
+              Products
+            </Link>
+            <Link href="/about" className="text-gray-700 hover:text-blue-600 transition font-medium">
+              About
+            </Link>
+            <Link href="/contact" className="text-gray-700 hover:text-blue-600 transition font-medium">
+              Contact
+            </Link>
+          </div>
 
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>About</NavigationMenuTrigger>
-        </NavigationMenuItem>
+          {/* Search Bar */}
+          <form onSubmit={handleSearch} className="hidden lg:flex items-center gap-2 flex-1 max-w-md mx-8">
+            <div className="relative flex-1">
+              <Input
+                type="text"
+                placeholder="Search products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 pr-4"
+              />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            </div>
+          </form>
 
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Contact</NavigationMenuTrigger>
-        </NavigationMenuItem>
+          {/* Right Side Actions */}
+          <div className="flex items-center gap-4">
+            {/* User Account */}
+            <Button variant="ghost" size="icon" className="hidden sm:flex">
+              <User size={20} />
+            </Button>
 
-        <NavigationMenuItem>
-          <button className="relative flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition">
-            <ShoppingCart size={18} />
-            <span className="text-sm font-medium">Cart</span>
+            {/* Cart */}
+            <Link href="/cart">
+              <Button variant="ghost" className="relative bg-blue-600 hover:bg-blue-700 transition text-color-black">
+                <ShoppingCart size={20} />
+                <span className="ml-2 hidden sm:inline">Cart</span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
 
-            <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-              
-            </span>
-          </button>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
-  )
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <Menu size={20} />
+            </Button>
+          </div>
+        </div>
+
+        {isMenuOpen && (
+          <div className="md:hidden border-t py-4">
+            <div className="flex flex-col gap-4">
+              <Link href="/" className="text-gray-700 hover:text-blue-600 transition font-medium">
+                Home
+              </Link>
+              <Link href="/products" className="text-gray-700 hover:text-blue-600 transition font-medium">
+                Products
+              </Link>
+              <Link href="/about" className="text-gray-700 hover:text-blue-600 transition font-medium">
+                About
+              </Link>
+              <Link href="/contact" className="text-gray-700 hover:text-blue-600 transition font-medium">
+                Contact
+              </Link>
+
+              {/* Mobile Search */}
+              <form onSubmit={handleSearch} className="flex gap-2">
+                <Input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="flex-1"
+                />
+                <Button type="submit" size="icon">
+                  <Search size={20} />
+                </Button>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
 }
 
 export default NavigationMenuDemo

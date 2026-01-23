@@ -81,7 +81,7 @@ const SignUpPage = () => {
               <label htmlFor="fullName" className="block text-sm font-medium text-black mb-1">
                 Full Name
               </label>
-              <input id="fullName" type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="xxxx xxxxxxxxxx" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-black" />
+              <input id="fullName" type="text" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Full Name" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-black" />
             </div>
 
             <div>
@@ -110,7 +110,7 @@ const SignUpPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                placeholder="you@email.com"
+                placeholder="you@gmail.com"
                 required
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition text-black"
               />

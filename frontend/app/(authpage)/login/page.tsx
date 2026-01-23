@@ -4,6 +4,8 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import SignUpPage from '../SignUpPage/page'
+import { NavigationMenuDemo } from '@/component/ui/navigation-menu'
+import Home from '@/app/Home/page'
 
 const LoginPage = () => {
   const [contact, setNumber] = useState('')
@@ -102,6 +104,7 @@ const LoginPage = () => {
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
+          
 
           <div className="mt-6 relative">
             <div className="absolute inset-0 flex items-center">

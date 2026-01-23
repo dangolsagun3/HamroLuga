@@ -95,9 +95,7 @@ export function DeleteDialog({ item }: DeleteDialogProps) {
     </Dialog>
   )
 }
-
-
-
+   
 interface ProductDialogProps {
   action?: 'edit' | 'add';
   item?: Product;
