@@ -1,4 +1,4 @@
-'use client'
+npm 'use client'
 import { Button } from "@/components/ui/button"
 import {
   Table,

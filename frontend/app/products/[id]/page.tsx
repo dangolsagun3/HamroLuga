@@ -6,6 +6,9 @@ import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { addItem, incrementQuantity, decrementQuantity } from "../../redux/slice/cartSlice"; 
+import ProductCard from "@/components/ui/product-card";
 
 type Product = {
   id: number;
@@ -55,50 +58,103 @@ const ProductById = () => {
 
   return (
     <div className="p-4">
-      <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="relative w-full h-96 bg-gray-100">
-          <Image
-            src={product.images?.[0] || "/placeholder.png"}
-            alt={product.title}
-            fill
-            unoptimized
-            className="object-cover"
-          />
+      <div className="max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden">
+          <div className="relative w-full h-96 bg-gray-100">
+            <Image
+              src={product.images?.[0] || "/placeholder.png"}
+              alt={product.title}
+              fill
+              unoptimized
+              className="object-cover"
+            />
+          </div>
         </div>
 
-        <div className="p-6">
-          <h1 className="text-3xl font-bold mb-2 text-black">
-            {product.title}
-          </h1>
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h1 className="text-3xl font-bold mb-2 text-black">{product.title}</h1>
 
-          <p className="text-2xl font-bold mb-4 text-blue-600">
-            ${product.price}
-          </p>
+          <p className="text-3xl font-extrabold mb-4 text-[var(--primary)]">${product.price}</p>
 
-          <button
-            className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700 transition flex items-center justify-center gap-2"
-            onClick={() => {
-              const savedCart = localStorage.getItem('cart');
-              let cart = [];
-              if (savedCart) {
-                try {
-                  cart = JSON.parse(savedCart);
-                } catch (error) {
-                  console.error('Error parsing cart:', error);
-                }
-              }
-              cart.push(product);
-              localStorage.setItem('cart', JSON.stringify(cart));
-              toast.success(`${product.title} added to cart!`);
-            }}
-          >
-            <ShoppingCart size={20} />
-            Add to Cart
-          </button>
+          <ProductPageQuantityControls product={product} />
+
+          <div className="mt-6">
+            <h4 className="font-semibold mb-2">Product details</h4>
+            <p className="text-sm text-muted">{product.description || 'No description available.'}</p>
+          </div>
+        </div>
+
+        <div className="lg:col-span-3 mt-8">
+          <h3 className="text-xl font-semibold mb-4">You might also like</h3>
+          <SuggestedProducts currentId={product.id} />
         </div>
       </div>
     </div>
   );
 };
+
+const SuggestedProducts = ({ currentId }: { currentId: number }) => {
+  const [items, setItems] = React.useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchSuggested = async () => {
+      try {
+        const res = await axios.get('https://api.escuelajs.co/api/v1/products');
+        const suggested = res.data.filter((p: any) => p.id !== currentId).slice(0, 4).map((p: any) => ({ id: p.id, title: p.title, price: p.price, images: p.images, description: p.description }));
+        setItems(suggested);
+      } catch (error) {
+        console.error('Failed to load suggested products', error);
+      }
+    };
+    fetchSuggested();
+  }, [currentId]);
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      {items.map((p) => (
+        <div key={p.id}>
+          <ProductCard product={p} onAddToCart={() => {}} />
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ProductPageQuantityControls = ({ product }: { product: Product }) => {
+  const dispatch = useAppDispatch();
+  const quantity = useAppSelector((state) => state.cart.items.find((i: any) => i.id === product.id)?.quantity || 0);
+
+  if (quantity === 0) {
+    return (
+      <button
+        className="w-full bg-blue-600 text-black py-3 rounded hover:bg-blue-700 transition flex items-center justify-center gap-2"
+        onClick={() => {
+          dispatch(addItem({ id: product.id, title: product.title, price: product.price, images: product.images }));
+          toast.success(`${product.title} added to cart!`);
+        }}
+      >
+        <ShoppingCart size={20} />
+        Add to Cart
+      </button>
+    )
+  }
+
+  return (
+    <div className="flex gap-2">
+      <button
+        className="px-3 py-2 bg-gray-200 rounded"
+        onClick={() => dispatch(decrementQuantity(product.id))}
+        disabled={quantity === 0}
+      >-
+      </button>
+      <div className="px-3 py-2 border rounded">{quantity}</div>
+      <button
+        className="px-3 py-2 bg-gray-200 rounded"
+        onClick={() => dispatch(incrementQuantity(product.id))}
+      >+
+      </button>
+    </div>
+  )
+}
 
 export default ProductById;

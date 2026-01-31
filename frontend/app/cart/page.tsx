@@ -1,78 +1,40 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import { Trash2, Plus, Minus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import Link from "next/link";
 import { toast } from "sonner";
-
-type CartItem = {
-  id: number;
-  title: string;
-  price: number;
-  images: string[];
-  quantity: number;
-};
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { removeItem, setQuantity } from "../redux/slice/cartSlice"; 
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Load cart from localStorage
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      try {
-        const parsedCart = JSON.parse(savedCart);
-        // Convert simple product array to cart items with quantities
-        const cartWithQuantities = parsedCart.reduce((acc: CartItem[], item: any) => {
-          const existing = acc.find(cartItem => cartItem.id === item.id);
-          if (existing) {
-            existing.quantity += 1;
-          } else {
-            acc.push({ ...item, quantity: 1 });
-          }
-          return acc;
-        }, []);
-        setCartItems(cartWithQuantities);
-      } catch (error) {
-        console.error('Error parsing cart from localStorage:', error);
-      }
-    }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    // Save cart to localStorage whenever it changes
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+  const dispatch = useAppDispatch();
+  const cartItems = useAppSelector((state) => state.cart.items);
+  const loading = false; // data comes from Redux (already persisted)
 
   const updateQuantity = (id: number, newQuantity: number) => {
     if (newQuantity <= 0) {
-      removeItem(id);
+      handleRemoveItem(id);
       return;
     }
 
-    setCartItems(prev =>
-      prev.map(item =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    dispatch(setQuantity({ id, quantity: newQuantity }));
   };
 
-  const removeItem = (id: number) => {
-    setCartItems(prev => prev.filter(item => item.id !== id));
+  const handleRemoveItem = (id: number) => {
+    dispatch(removeItem(id));
     toast.success("Item removed from cart");
   };
 
   const getTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cartItems.reduce((total: number, item: any) => total + (item.price * item.quantity), 0);
   };
 
   const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0);
+    return cartItems.reduce((total: number, item: any) => total + item.quantity, 0);
   };
 
   if (loading) {
@@ -117,11 +79,10 @@ const Cart = () => {
                   <TableRow key={item.id}>
                     <TableCell>
                       <div className="w-16 h-16 relative">
-                        <Image
+                        <img
                           src={item.images[0] || '/placeholder.jpg'}
                           alt={item.title}
-                          fill
-                          className="object-cover rounded"
+                          className="object-cover rounded w-full h-full"
                         />
                       </div>
                     </TableCell>
@@ -158,7 +119,7 @@ const Cart = () => {
                         variant="ghost"
                         size="icon"
                         className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        onClick={() => removeItem(item.id)}
+                        onClick={() => handleRemoveItem(item.id)}
                       >
                         <Trash2 size={16} />
                       </Button>
@@ -170,12 +131,12 @@ const Cart = () => {
 
             <div className="bg-gray-50 px-6 py-4 border-t">
               <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-black">
                   Total items: {getTotalItems()}
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-gray-600 mb-1">Total Price</div>
-                  <div className="text-2xl font-bold text-gray-900">
+                  <div className="text-sm text-black mb-1">Total Price</div>
+                  <div className="text-2xl font-bold text-black">
                     ${getTotalPrice().toFixed(2)}
                   </div>
                 </div>
@@ -190,7 +151,7 @@ const Cart = () => {
                   </Button>
                 </Link>
                 <Button
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-blue-600 text-black hover:bg-blue-700"
                   size="lg"
                   onClick={() => toast.info("Checkout functionality coming soon!")}
                 >

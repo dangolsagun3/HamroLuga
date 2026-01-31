@@ -41,22 +41,23 @@ export function NavigationMenuDemo({ cartCount = 0, onSearch }: NavigationMenuPr
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="text-2xl font-bold text-blue-600 flex items-center gap-2">
-            🛍️ HamroLuga
+          <Link href="/" className="text-2xl font-bold text-black flex items-center gap-2">
+            <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-transparent bg-clip-text">🛍️</span>
+            <span>HamroLuga</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-gray-700 hover:text-blue-600 transition font-medium">
+            <Link href="/" className="text-black hover:text-blue-600 transition font-medium">
               Home
             </Link>
-            <Link href="/products" className="text-gray-700 hover:text-blue-600 transition font-medium">
+            <Link href="/products" className="text-black hover:text-blue-600 transition font-medium">
               Products
             </Link>
-            <Link href="/about" className="text-gray-700 hover:text-blue-600 transition font-medium">
+            <Link href="/about" className="text-black hover:text-blue-600 transition font-medium">
               About
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-blue-600 transition font-medium">
+            <Link href="/contact" className="text-black hover:text-blue-600 transition font-medium">
               Contact
             </Link>
           </div>
@@ -84,7 +85,7 @@ export function NavigationMenuDemo({ cartCount = 0, onSearch }: NavigationMenuPr
 
             {/* Cart */}
             <Link href="/cart">
-              <Button variant="ghost" className="relative bg-blue-600 hover:bg-blue-700 transition text-color-black">
+              <Button variant="ghost" className="relative bg-blue-600 hover:bg-blue-700 transition text-black">
                 <ShoppingCart size={20} />
                 <span className="ml-2 hidden sm:inline">Cart</span>
                 {cartCount > 0 && (

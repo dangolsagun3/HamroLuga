@@ -1,26 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #000000; /* All letters black */
+  --primary: #2563eb;
+  --muted: #6b7280;
+  --card-bg: #ffffff;
+  --radius: 0.5rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Liberation Mono', monospace;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #ffffff;
+    --foreground: #000000;
   }
 }
+
+html, body { height: 100%; }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
+
+/* Force black text throughout the UI (user requirement)
+   You can override explicitly when needed by using inline styles with a different color. */
+* { color: var(--foreground) !important; }
+
+h1,h2,h3,h4,h5,h6 { color: var(--foreground) !important; }
+a { color: var(--foreground); text-decoration: none; }
+a:hover { color: var(--primary); text-decoration: underline; }
+
+.card { background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 6px 18px rgba(16,24,40,0.08); }
+
+/* Buttons: ensure readable text even when backgrounds are colored */
+button, .btn { color: var(--foreground) !important; }
+
+/* Small utility */
+.text-muted { color: var(--muted) !important; }
